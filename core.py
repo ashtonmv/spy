@@ -133,7 +133,7 @@ def make_slab(basis, hkl, min_thickness, min_vacuum,
     if len(selective_dynamics) == 0:
         selective_dynamics = [(True, True, True) for i in iface.sites]
     iface_poscar = Poscar(iface, selective_dynamics=selective_dynamics)
-    slab = Structure.from_file(iface_poscar.get_string())
+    slab = Structure.from_str(iface_poscar.get_string())
     sga = SpacegroupAnalyzer(slab)
 
     # This is not *necessary*, but often gives a
