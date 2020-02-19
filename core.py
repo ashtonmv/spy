@@ -184,14 +184,14 @@ def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
         z={charge_z};}} }}\n")
     inp.write("}\n\n")
     inp.write("main  {\n   linQN {\n")
-    inp.write("{TAB2}dEnergy = {dE};\n")
-    inp.write("{TAB2}dF = {dF};\n")
+    inp.write(f"{TAB2}dEnergy = {dE};\n")
+    inp.write(f"{TAB2}dF = {dF};\n")
     inp.write(f"{TAB2}maxSteps={n_steps};\n")
     inp.write(f"{TAB2}bornOppenheimer {{\n{TAB2}   scfDiag {{\
         \n{TAB2*2}rhoMixing= 0.5;\n")
     inp.write(f"{TAB2*2}blockCCG {{ blockSize=64; }}\
         \n{TAB2*2}dEnergy={dE};\n{TAB2*2}maxSteps={n_steps};\n")
-    inp.write("{TAB2}   \n{TAB2}\n   }\n}")
+    inp.write(f"{TAB2}   \n{TAB2}\n   }\n}")
 
 
 def write_runjob(name, n_tasks, time, command):
