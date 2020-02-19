@@ -191,7 +191,7 @@ def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
         \n{TAB2*2}rhoMixing= 0.5;\n")
     inp.write(f"{TAB2*2}blockCCG {{ blockSize=64; }}\
         \n{TAB2*2}dEnergy={dE};\n{TAB2*2}maxSteps={n_steps};\n")
-    inp.write(f"{TAB2}   \n{TAB2}\n   }\n}")
+    inp.write(f"{TAB2}   \n{TAB2}\n   }}\n}}")
 
 
 def write_runjob(name, n_tasks, time, command):
