@@ -51,7 +51,7 @@ class Structure(pymatgen.Structure):
 
         with open(filename, "w") as sx:
             sx.write("structure {\n")
-            sx.write(f"   cell = [{a}, {b}, {c}];\n")
+            sx.write(f"   cell = [{list(a)}, {list(b)}, {list(c)}];\n")
             n = 0
             for elt in coords:
                 sx.write(f"   species {{\n")
