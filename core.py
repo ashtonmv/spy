@@ -5,6 +5,8 @@ import os
 import pymatgen
 from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.symmetry.bandstructure import HighSymmKpath
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
 
 from mpinterfaces.interface import Interface
 
