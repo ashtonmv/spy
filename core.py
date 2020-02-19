@@ -2,7 +2,6 @@ from spy.conversions import A_TO_BOHR, TAB2
 
 import os
 
-from pymatgen import Structure
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 import re
@@ -13,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class SxStructure(Structure):
+class Structure(pymatgen.Structure):
     
     """
     Same as a Pymatgen Structure object, but able to write & read
@@ -21,7 +20,7 @@ class SxStructure(Structure):
     and only converted to Bohr when writing the file**
     """
 
-    def to_file(self, filename="structure.sx", selective_dynamics=[]):
+    def to_sx_file(self, filename="structure.sx", selective_dynamics=[]):
         """
         Write a SPHInX C++-style structure file.
 
@@ -65,7 +64,7 @@ class SxStructure(Structure):
             sx.write("}\n")
 
 
-    def from_file(filename="structure.sx"):
+    def from_sx_file(filename="structure.sx"):
         sx = open(filename).read()
 
         open_squares = [m.start() for m in re.finditer("\[", sx)]
@@ -115,7 +114,7 @@ class SxStructure(Structure):
                 ai += 1
                 sai += 1
 
-        return SpyStructure(lattice=lattice, species=species_names,
+        return Structure(lattice=lattice, species=species_names,
                          coords=coordinates, coords_are_cartesian=True)
 
 
@@ -138,7 +137,7 @@ def make_slab(basis, hkl, min_thickness, min_vacuum,
     # is easier to understand.
     slab = sga.get_primitive_standard_structure()
     slab.make_supercell(supercell)
-    return SxStructure(slab)
+    return Structure(slab)
 
 
 def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
