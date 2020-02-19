@@ -143,7 +143,8 @@ def make_slab(basis, hkl, min_thickness, min_vacuum,
     # is easier to understand.
     slab = sga.get_primitive_standard_structure()
     slab.make_supercell(supercell)
-    return Structure(slab)
+    return Structure(lattice=slab.lattice, coords=slab.cart_coords,
+        species=slab.species, coords_are_cartesian=True)
 
 
 def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
