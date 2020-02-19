@@ -147,8 +147,13 @@ def make_slab(basis, hkl, min_thickness, min_vacuum,
         species=slab.species, coords_are_cartesian=True)
 
 
-def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
+def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
                 charge_z=0, vdw=None, dE=1e-6, dF=1e-5, n_steps=150):
+
+    ecut *= EV_TO_RY
+    charge_z *= A_TO_BOHR
+    dE *= EV_TO_HA
+    dF *= EV_TO_HA / A_TO_BOHR
     inp = open("input.sx", "w")
     inp.write("format paw;\ninclude <parameters.sx>;\npawPot {\n")
     for element in [s for s in structure.composition.as_dict()]:
@@ -169,7 +174,7 @@ def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write(f"   xc = {xc};\n")
     if charge is not None:
         inp.write("   dipoleCorrection;\n")
-        inp.write(f"   nExcessElectrons = {charge};\n")
+        inp.write(f"   nExcessElectrons = -{charge};\n")
     if vdw is not None:
         inp.write(f"   vdwCorrection {{method = \"{vdw}\";}}\n")
     inp.write("}\n\n")
