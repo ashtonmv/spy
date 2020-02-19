@@ -194,7 +194,7 @@ def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write("{TAB2}   \n{TAB2}\n   }\n}")
 
 
-def write_runjob(name, n_tasks, time):
+def write_runjob(name, n_tasks, time, command):
     inp = open("runjob", "w")
     if n_tasks > 20:
         partition = "p.cmfe"
@@ -208,8 +208,7 @@ def write_runjob(name, n_tasks, time):
         \n#SBATCH --job-name={name}\
         \n#SBATCH --get-user-env=L\n")
     inp.write(f"module load gcc impi\
-        \nsrun -n {n_tasks} /u/mashton/software/sphinx/bin/sphinx\
-        > sphinx.log")
+        \nsrun -n {n_tasks} {command}")
 
 
 def get_high_symmetry_kpoints_group(structure, n_points=20, symprec=0.01):
