@@ -147,7 +147,7 @@ def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write("}\n\n")
     inp.write("initialGuess  {\n")
     inp.write("   waves { lcao { maxSteps=1; rhoMixing = 0.; }; pawBasis;}\n")
-    inp.write(f"   rho {{ atomicOrbitals; charged {{charge = {charge};\ 
+    inp.write(f"   rho {{ atomicOrbitals; charged {{charge = {charge};\
         z={charge_z};}} }}\n")
     inp.write("}\n\n")
     inp.write("main  {\n   linQN {\n")
@@ -194,7 +194,7 @@ def get_high_symmetry_kpoints_group(structure, n_points=20, symprec=0.01):
 
     kpts_group = ""
     kpts_group += "kPoints {\n   relative;\n"
-    kpts_group += f"   from {{ coords={start}; label=\"{label}\"; }}\n")
+    kpts_group += f"   from {{ coords={start}; label=\"{label}\"; }}\n"
     for ki in range(1, len(kpts.kpath["path"][0])):
         coords = list(kpts.kpath["kpoints"][kpts.kpath["path"][0][ki]])
         label = kpts.kpath["path"][0][ki].replace("\\Gamma", "\\xG")
@@ -206,7 +206,7 @@ def get_high_symmetry_kpoints_group(structure, n_points=20, symprec=0.01):
         for ki in range(1, len(path)):
             coords = list(kpts.kpath["kpoints"][path[ki]])
             label = path[ki].replace("\\Gamma", "\\xG")
-            kpts_group += f"   to {{ coords={coords}; label=\{label}\"; nPoints={n_points}; }}\n")
+            kpts_group += f"   to {{ coords={coords}; label=\{label}\"; nPoints={n_points}; }}\n"
     kpts_group += "}"
     return kpts_group
 
