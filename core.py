@@ -66,7 +66,7 @@ class Structure(pymatgen.Structure):
                         sx.write("movableZ; ")
                     sx.write("}\n")
                     n += 1
-                sx.write(f"   \n")
+                sx.write(f"   }}\n")
             sx.write("}\n")
 
 
