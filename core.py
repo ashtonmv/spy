@@ -1,4 +1,4 @@
-from spy.conversions import A_TO_BOHR, TAB2
+from spy.conversions import *
 
 import os
 
