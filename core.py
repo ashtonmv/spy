@@ -148,12 +148,12 @@ def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write("initialGuess  {\n")
     inp.write("   waves { lcao { maxSteps=1; rhoMixing = 0.; }; pawBasis;}\n")
     inp.write(f"   rho {{ atomicOrbitals; charged {{charge = {charge};\ 
-        z={charge_z};}} }}\n" % (charge, charge_z))
+        z={charge_z};}} }}\n")
     inp.write("}\n\n")
     inp.write("main  {\n   linQN {\n")
     inp.write("{TAB2}dEnergy = {dE};\n")
     inp.write("{TAB2}dF = {dF};\n")
-    inp.write(f"{TAB2}maxSteps=%s;\n")
+    inp.write(f"{TAB2}maxSteps={n_steps};\n")
     inp.write(f"{TAB2}bornOppenheimer {{\n{TAB2}   scfDiag {{\
         \n{TAB2*2}rhoMixing= 0.5;\n")
     inp.write(f"{TAB2*2}blockCCG {{ blockSize=64; }}\
@@ -289,7 +289,7 @@ def plot_band_structure(output_filename="bands.pdf", spins=[0,1],
 
 def get_hirshfeld_charges(filename="hirshfeld.sx", force_overwrite=False):
     if force_overwrite or not os.path.isfile(filename):
-        os.system("~/software/sphinx/bin/sxpawatomvolume > %s" % filename)
+        os.system(f"~/software/sphinx/bin/sxpawatomvolume > {filename}")
     lines = open(filename).readlines()
     hirshfeld_line = [line for line in lines if "Hirshfeld" in line][0]
     hirshfeld_charges = [float(c) for c in
@@ -300,9 +300,9 @@ def get_hirshfeld_charges(filename="hirshfeld.sx", force_overwrite=False):
 def create_charged_structure_file(filename="CONTCAR", convert_from_sphinx=False):
     if convert_from_sphinx or not os.path.isfile(filename):
         if os.path.isfile("relaxedStr.sx"):
-            os.system("/u/mashton/software/sphinx/bin/sx2poscar -i relaxedStr.sx -o %s" % filename)
+            os.system(f"/u/mashton/software/sphinx/bin/sx2poscar -i relaxedStr.sx -o {filename}")
         else: 
-            raise("ERROR: No relaxedStr.sx found in %s" % os.getcwd())
+            raise(f"ERROR: No relaxedStr.sx found in {os.getcwd()}")
 
     charges = get_hirshfeld_charges()
 
