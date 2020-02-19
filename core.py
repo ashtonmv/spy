@@ -212,7 +212,8 @@ def write_runjob(name, n_tasks, time, command):
 
 
 def get_energies():
-    return [float(line.split()[2]) for line in open("energy.dat").readlines()]
+    return [float(line.split()[2])/EV_TO_HA for line in
+        open("energy.dat").readlines()]
 
 
 def get_high_symmetry_kpoints_group(structure, n_points=20, symprec=0.01):
