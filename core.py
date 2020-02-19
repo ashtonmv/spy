@@ -119,6 +119,28 @@ class SxStructure(Structure):
                          coords=coordinates, coords_are_cartesian=True)
 
 
+def make_slab(basis, hkl, min_thickness, min_vacuum,
+              selective_dynamics=[], supercell=(1,1,1)):
+    iface = Interface(basis, hkl=hkl,
+                  min_thick=min_thickness, min_vac=min_vacuum,
+                  primitive=False, from_ase=True)
+    iface.create_interface()
+    iface.sort()
+
+    if len(selective_dynamics) == 0:
+        selective_dynamics = [(True, True, True) for i in iface.sites]
+    iface_poscar = Poscar(iface, selective_dynamics=selective_dynamics)
+    slab = Structure.from_file(iface_poscar.get_string())
+    sga = SpacegroupAnalyzer(slab)
+
+    # This is not *necessary*, but often gives a
+    # much prettier unit cell whose periodicity
+    # is easier to understand.
+    slab = sga.get_primitive_standard_structure()
+    slab.make_supercell(supercell)
+    return SxStructure(slab)
+
+
 def write_input(structure, ecut=40, kpoints=[10,10,1], xc="PBE", charge=0,
                 charge_z=0, vdw=None, dE=1e-6, dF=1e-5, n_steps=150):
     inp = open("input.sx", "w")
