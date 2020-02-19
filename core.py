@@ -5,6 +5,8 @@ import os
 import pymatgen
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
+from mpinterfaces.interface import Interface
+
 import re
 
 import scipy
