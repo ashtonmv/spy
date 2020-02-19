@@ -3,6 +3,7 @@ from spy.conversions import A_TO_BOHR, TAB2
 import os
 
 import pymatgen
+from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from mpinterfaces.interface import Interface
