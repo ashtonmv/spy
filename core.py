@@ -2,6 +2,7 @@ from spy.conversions import A_TO_BOHR, TAB2
 
 import os
 
+import pymatgen
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 import re
