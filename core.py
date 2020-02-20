@@ -211,6 +211,12 @@ def write_runjob(name, n_tasks, time, command):
         \nsrun -n {n_tasks} {command}")
 
 
+def get_field():
+    for line in open("sphinx.log").readlines()[::-1]:
+        if "field from charge" in line:
+            return float(line.split()[-1])*51.4
+
+
 def get_energies():
     log = open("sphinx.log").read()
     if not ("Convergence reached." in log and
