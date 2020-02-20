@@ -212,6 +212,10 @@ def write_runjob(name, n_tasks, time, command):
 
 
 def get_energies():
+    log = open("sphinx.log").read()
+    if not ("Convergence reached." in log and
+            "Program exited normally." in log):
+        print(f"WARNING: {os.getcwd()} did not converge.")
     return [float(line.split()[2])/EV_TO_HA for line in
         open("energy.dat").readlines()]
 
