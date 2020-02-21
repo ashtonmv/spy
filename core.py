@@ -7,7 +7,6 @@ from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-
 from mpinterfaces.interface import Interface
 
 import re
@@ -223,7 +222,7 @@ def get_energies():
             "Program exited normally." in log):
         print(f"WARNING: {os.getcwd()} did not converge.")
     return [float(line.split()[2])/EV_TO_HA for line in
-        open("energy.dat").readlines()]
+        open("energy-structOpt.dat").readlines()]
 
 
 def get_high_symmetry_kpoints_group(structure, n_points=20, symprec=0.01):
@@ -347,7 +346,7 @@ def get_hirshfeld_charges(filename="hirshfeld.sx", force_overwrite=False):
 def create_charged_structure_file(filename="CONTCAR", convert_from_sphinx=False):
     if convert_from_sphinx or not os.path.isfile(filename):
         if os.path.isfile("relaxedStr.sx"):
-            os.system(f"/u/mashton/software/sphinx/bin/sx2poscar -i relaxedStr.sx -o {filename}")
+            Structure.from_sx_file("relaxedStr.sx").to("poscar", filename)
         else: 
             raise(f"ERROR: No relaxedStr.sx found in {os.getcwd()}")
 
