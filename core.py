@@ -216,9 +216,9 @@ def get_field():
             return float(line.split()[-1])*51.4
 
 
-def get_energies():
+def get_energies(verbose=False):
     log = open("sphinx.log").read()
-    if not ("Convergence reached." in log and
+    if verbose and not ("Convergence reached." in log and
             "Program exited normally." in log):
         print(f"WARNING: {os.getcwd()} did not converge.")
     return [float(line.split()[1])/EV_TO_HA for line in
