@@ -2,6 +2,10 @@ from spy.conversions import *
 
 import os
 
+from ovito.modifiers import *
+from ovito.data import ParticleProperty
+from ovito.io import import_file, export_file
+
 import pymatgen
 from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.symmetry.bandstructure import HighSymmKpath
