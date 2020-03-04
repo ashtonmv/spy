@@ -151,7 +151,8 @@ def make_slab(basis, hkl, min_thickness, min_vacuum,
 
 
 def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
-                charge_z=0, vdw=None, dE=1e-6, dF=1e-5, n_steps=150):
+                charge_z=0, vdw=None, dE=1e-6, dF=1e-5, ionic_steps=150,
+                electronic_steps=150):
 
     ecut *= EV_TO_RY
     charge_z *= A_TO_BOHR
@@ -189,11 +190,11 @@ def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write("main  {\n   linQN {\n")
     inp.write(f"{TAB2}dEnergy = {dE};\n")
     inp.write(f"{TAB2}dF = {dF};\n")
-    inp.write(f"{TAB2}maxSteps={n_steps};\n")
+    inp.write(f"{TAB2}maxSteps={ionic_steps};\n")
     inp.write(f"{TAB2}bornOppenheimer {{\n{TAB2}   scfDiag {{\
         \n{TAB2*2}rhoMixing= 0.5;\n")
     inp.write(f"{TAB2*2}blockCCG {{ blockSize=64; }}\
-        \n{TAB2*2}dEnergy={dE};\n{TAB2*2}maxSteps={n_steps};\n")
+        \n{TAB2*2}dEnergy={dE};\n{TAB2*2}maxSteps={electronic_steps};\n")
     inp.write(f"{TAB2}   }}\n{TAB2}}}\n   }}\n}}")
 
 
