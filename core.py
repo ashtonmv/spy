@@ -198,8 +198,8 @@ def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
     inp.write(f"{TAB2}   }}\n{TAB2}}}\n   }}\n}}")
 
 
-def write_runjob(name, n_tasks, time, command):
-    inp = open("runjob", "w")
+def write_slurm(name, n_tasks, time, modules, command):
+    inp = open("slurm_submit", "w")
     if n_tasks > 20:
         partition = "p.cmfe"
     else:
@@ -211,7 +211,7 @@ def write_runjob(name, n_tasks, time, command):
         \n#SBATCH --output=err.out\
         \n#SBATCH --job-name={name}\
         \n#SBATCH --get-user-env=L\n")
-    inp.write(f"module load gcc impi\
+    inp.write(f"module load {' '.join(modules)}\
         \nsrun -n {n_tasks} {command}")
 
 
