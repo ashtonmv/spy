@@ -7,11 +7,13 @@ from ovito.data import ParticleProperty
 from ovito.io import import_file, export_file
 
 import pymatgen
+from pymatgen.core.surface import Slab, SlabGenerator
 from pymatgen.io.vasp.inputs import Poscar
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.io.ase import AseAtomsAdaptor
 
-from mpinterfaces.interface import Interface
+from ase.lattice.surface import surface
 
 import re
 
@@ -127,27 +129,32 @@ class Structure(pymatgen.Structure):
                          coords=coordinates, coords_are_cartesian=True)
 
 
-def make_slab(basis, hkl, min_thickness, min_vacuum,
-              selective_dynamics=[], supercell=(1,1,1)):
-    iface = Interface(basis, hkl=hkl,
-                  min_thick=min_thickness, min_vac=min_vacuum,
-                  primitive=False, from_ase=True)
-    iface.create_interface()
-    iface.sort()
+def make_slab(structure, hkl, min_thickness, min_vacuum):
+    """
+    takes in the intial structure as pymatgen Structure object
+    uses ase to generate the slab
+    returns pymatgen Slab object
 
-    if len(selective_dynamics) == 0:
-        selective_dynamics = [(True, True, True) for i in iface.sites]
-    iface_poscar = Poscar(iface, selective_dynamics=selective_dynamics)
-    slab = Structure.from_str(iface_poscar.get_string(), fmt="poscar")
-    sga = SpacegroupAnalyzer(slab)
-
-    # This is not *necessary*, but often gives a
-    # much prettier unit cell whose periodicity
-    # is easier to understand.
-    slab = sga.get_primitive_standard_structure()
-    slab.make_supercell(supercell)
-    return Structure(lattice=slab.lattice, coords=slab.cart_coords,
-        species=slab.species, coords_are_cartesian=True)
+    Args:
+        structure: pymatgen structure object
+        hkl: hkl index of surface of slab to be created
+        min_thickness: minimum thickness of slab in Angstroms
+        min_vacuum: minimum vacuum spacing
+    """
+    ase_atoms = AseAtomsAdaptor().get_atoms(structure)
+    sg = SlabGenerator(structure, hkl, min_thickness, min_vacuum)
+    h = sg._proj_height
+    nlayers = int(np.ceil(sg.min_slab_size / h))
+    ase_slab = surface(ase_atoms, hkl, nlayers)
+    ase_slab.center(vacuum=min_vacuum / 2, axis=2)
+    pmg_slab_structure = AseAtomsAdaptor().get_structure(ase_slab)
+    slab = Slab(lattice=pmg_slab_structure.lattice,
+                species=pmg_slab_structure.species_and_occu,
+                coords=pmg_slab_structure.frac_coords,
+                site_properties=pmg_slab_structure.site_properties,
+                miller_index=hkl, oriented_unit_cell=pmg_slab_structure,
+                shift=0., scale_factor=None, energy=None)
+    return SpacegroupAnalyzer(slab).get_conventional_standard_structure()
 
 
 def write_input(structure, ecut=500, kpoints=[10,10,1], xc="PBE", charge=0,
