@@ -29,7 +29,8 @@ class Structure(pymatgen.Structure):
     and only converted to Bohr when writing the file**
     """
 
-    def to_sx_file(self, filename="structure.sx", selective_dynamics=[]):
+    def to_sx_file(self, filename="structure.sx", symmetry=True,
+                   selective_dynamics=[]):
         """
         Write a SPHInX C++-style structure file.
 
@@ -55,6 +56,8 @@ class Structure(pymatgen.Structure):
         with open(filename, "w") as sx:
             sx.write("structure {\n")
             sx.write(f"   cell = [{list(a)}, {list(b)}, {list(c)}];\n")
+            if not symmetry:
+                sx.write("    symmetry {}\n")
             n = 0
             for elt in coords:
                 sx.write(f"   species {{\n")
